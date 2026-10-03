@@ -1,0 +1,5 @@
+* text=auto eol=lf
+recovered/** -text
+*.png binary
+*.ico binary
+*.jpg binary
