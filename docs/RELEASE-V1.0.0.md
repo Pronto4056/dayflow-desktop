@@ -21,7 +21,7 @@ Tasks and completed-task history, recurring routines, calendar events and Daily 
 
 The October review exercised the actual packaged renderer in a browser with sample data. Task workflows, routine/calendar synchronization, transaction recalculation, transfers, deletion/Undo, profile changes, and browser persistence were tested. Clean Windows installation, offline launch, OS-level persistence, updates, shortcuts, and uninstallation remain unverified.
 
-**The downloadable 1.0.0 installer is unchanged and has known issues:** local-date/month-end handling, monthly recurrence at the end of a month, negative-balance clamping, unreadable-data recovery, and the dashboard completion denominator. Fixes and a more readable timeline are available in the browser review build; they require a new Windows installer and Windows acceptance testing before release.
+**The downloadable 1.0.0 installer is unchanged and has known issues:** local-date/month-end handling, monthly recurrence at the end of a month, negative-balance clamping, unreadable-data recovery, the dashboard completion denominator, and Undo potentially overwriting later changes. Fixes and a more readable timeline are available in the browser review build; they require a new Windows installer and Windows acceptance testing before release.
 
 Use sample data while evaluating 1.0.0. The executable is not digitally signed; Windows SmartScreen may display an unknown-publisher warning. A checksum confirms file integrity, not publisher identity or software safety.
 

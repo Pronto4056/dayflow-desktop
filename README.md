@@ -1,111 +1,101 @@
 # DayFlow
 
-A personal project bringing daily planning and manual money tracking into one place.
+A personal project combining daily planning with manual money tracking. Tasks, routines, a calendar and a daily timeline sit alongside cards, budgets and transaction history in a teal light/dark interface.
 
-[Visit the website](https://pronto4056.github.io/dayflow-desktop/) · [Download Windows installer](https://github.com/Pronto4056/dayflow-desktop/releases/download/V1.0.0/DayFlow-Setup-1.0.0.exe) · [Release details](https://github.com/Pronto4056/dayflow-desktop/releases/tag/V1.0.0)
+[Website](https://pronto4056.github.io/dayflow-desktop/) · [Try the browser review build](https://pronto4056.github.io/dayflow-desktop/review-build/) · [Windows release](https://github.com/Pronto4056/dayflow-desktop/releases/tag/V1.0.0) · [Review report](docs/AUDIT.md)
 
-## Project status
+## Current status
 
-DayFlow is an experimental personal project, built iteratively with AI-assisted development. Version 1.0.0 is available as an **unsigned Windows installer**. Feedback and reproducible bug reports are welcome.
+DayFlow 1.0.0 is an **unsigned experimental Windows release**. The October review recovered the actual packaged application and tested its renderer in a browser. Several defects were corrected in a separate browser review build. **Those fixes are not included in the downloadable Windows installer.** Clean Windows installation, offline launch, updates and uninstallation still require testing. Evaluate the installer with sample data until these checks and an installer rebuild are complete.
 
-**This repository currently contains the promotional website, not the full React/Electron application source.** GitHub's automatically generated “Source code” ZIP and TAR files contain this repository only; they are not a rebuildable desktop application. Recovery of the complete application source is pending.
+## Screenshots
 
-The website includes a small, clearly labeled illustrative interactive demo. It is not the full application. Its example tasks reset on reload, and its calendar and financial figures are sample data. The separate full web prototype currently requires owner access.
+Real captures of the running application renderer in the browser review build, using fictional sample data. These are not native Windows captures or the landing page's illustrative demo.
 
-## What DayFlow is designed to do
+![DayFlow overview](docs/screenshots/DayFlow-01-Overview.jpg)
+![Monthly calendar](docs/screenshots/DayFlow-02-Calendar.jpg)
+![Daily Breakdown](docs/screenshots/DayFlow-03-Daily-Breakdown.jpg)
+![Financial overview](docs/screenshots/DayFlow-04-Financials.jpg)
+![Card details and budgets](docs/screenshots/DayFlow-05-Card-Details.jpg)
 
-- Organize tasks, priorities, deadlines, and completed work.
-- Schedule routines alongside calendar events and a daily timeline.
-- Track manually entered card balances, budgets, transactions, and transfers.
-- Offer local persistence and light/dark themes.
+## Features
 
-These describe the application scope. The October 2026 audit verified the website source and release metadata; it did **not** independently verify these desktop workflows. See the [audit and test checklist](docs/AUDIT.md).
+- Tasks with deadlines, priorities, recurrence, completion timestamps, restoration and confirmed deletion.
+- Weekly routines with days, time ranges, pause/resume and individual occurrence statuses.
+- Monthly calendar and 24-hour Daily Breakdown with duration-based blocks and overlapping items.
+- Up to five manually managed cards, multiple budgets, transaction history and transfers.
+- Financial summaries, category spending, budget warnings and transaction recalculation.
+- Profile editing, profile pictures, light/dark themes and confirmed account reset.
+- Local persistence; no bank connection or AI integration in this version.
 
-## Download and installation
+## Technologies and available files
 
-1. Download **DayFlow-Setup-1.0.0.exe** from the release link above.
-2. Verify the SHA-256 value below if you want to check file integrity.
-3. Open the installer and follow its prompts on a 64-bit Windows 10 or Windows 11 computer.
+The recovered interface is compiled JavaScript using React 19.2.6, HTML and CSS. The Electron shell uses JavaScript ES modules and a CommonJS preload. The promotional website uses HTML, CSS and JavaScript; Windows packaging is NSIS.
 
-Installer size: 144,241,594 bytes (approximately 137.6 MiB).
+| Path | Contents |
+| --- | --- |
+| `index.html` | Promotional website and clearly labelled illustrative demo |
+| `recovered/app/desktop/` | Original main process and preload recovered from the installer |
+| `recovered/app/dist-desktop/` | Original compiled application renderer, unchanged |
+| `recovered/app/package.json` | Packaged runtime manifest |
+| `review-build/` | Corrected browser renderer with provenance hashes |
+| `scripts/` | Guarded renderer recovery fixes and focused checks |
+| `docs/` | Audit, release notes, checksum and real screenshots |
 
-The installer is not digitally signed. Windows may show an unknown-publisher warning. A checksum match verifies integrity, not publisher identity or software safety. Only run software you trust.
+**This repository does not contain the complete original editable application project.** Original TS/TSX components, source maps, dependency lockfile, desktop build configuration, installer scripts and icon source have not been recovered. The packaged manifest is not a desktop build recipe. `npm install` cannot recreate the original installer from this repository. GitHub's automatic source archives at tag `V1.0.0` contain the older promotional website; current `main` includes the recovered files listed above. No portable executable is currently attached to the release.
 
-Clean Windows installation, launch, persistence, shortcuts, updates, and uninstallation still need a fresh end-to-end test. A portable executable is **not attached to the public release**, despite the older release description mentioning one.
+## Run the browser review locally
 
-### Verify the download
+Clone this repository, then serve it with Python 3:
 
-In PowerShell, from the folder containing the installer:
-
-```powershell
-Get-FileHash .\DayFlow-Setup-1.0.0.exe -Algorithm SHA256
+```sh
+python -m http.server 8080
 ```
 
-Expected SHA-256, also recorded in GitHub's release asset metadata:
+Open `http://localhost:8080/review-build/`. To regenerate the review build and run its focused checks, use Node.js:
+
+```sh
+node scripts/prepare-review-build.cjs recovered/app/dist-desktop review-build
+node scripts/check-app.cjs
+```
+
+The generator verifies the exact original bundle hash and refuses incompatible inputs. It preserves the recovered originals. Browser data is separate from the installed Windows application's data; use one application tab at a time while reviewing.
+
+## Windows installation
+
+1. Download [DayFlow-Setup-1.0.0.exe](https://github.com/Pronto4056/dayflow-desktop/releases/download/V1.0.0/DayFlow-Setup-1.0.0.exe) from the release (144,241,594 bytes, about 138 MiB).
+2. Optionally verify it in PowerShell with `Get-FileHash .\DayFlow-Setup-1.0.0.exe -Algorithm SHA256`.
+3. Open the installer and follow its setup prompts. It is intended for 64-bit Windows 10/11. Windows SmartScreen may display an unknown-publisher warning because the executable is unsigned. Proceed only if you trust the source.
+4. Launch DayFlow and evaluate it with sample data. Installer location selection, shortcuts, native launch and uninstallation still need Windows acceptance testing.
+
+Expected installer SHA-256, also in [docs/SHA256SUMS.txt](docs/SHA256SUMS.txt):
 
 ```text
 7d35283ec269e7436a5c2ca72cb1533c60dad311f676d7fc49e6967e31b8af0d
 ```
 
-[Download the existing checksum file](https://github.com/Pronto4056/dayflow-desktop/releases/download/V1.0.0/DayFlow-1.0.0-SHA256.txt)
+A checksum verifies download integrity; it does not establish publisher identity or software safety. The historical checksum asset also lists files that are not currently attached to the release.
 
-## Privacy and local data
+## Privacy, backups and updates
 
-The application was designed for manual finance tracking, without bank connections. Do not enter full card numbers, security codes, PINs, bank passwords, or real sensitive financial information when evaluating this release.
+Balances and transactions are entered manually. Do not enter full card numbers, CVVs, PINs or banking credentials. Financial values are estimates, not live bank balances.
 
-The previously documented desktop data location is `%APPDATA%\DayFlow`. Confirm the folder exists on your installation. Close the app before copying that folder for backup; keep the backup private. Backup restoration and update retention have not been reverified in this audit.
+The recovered Electron shell uses `%APPDATA%\DayFlow` as its user-data directory and loads the bundled interface locally. The renderer stores application state using local storage. No encrypted-storage or security-audit claim is made. Device access and operating-system security still matter.
 
-Local storage does not, by itself, establish encryption or protection from other users of the computer. This project does not claim an independent security audit, bank-grade encryption, cloud synchronization, or financial advice.
+For a desktop backup, fully close DayFlow and copy the entire `%APPDATA%\DayFlow` folder to a safe location. Keep a backup before updates or troubleshooting; retaining data through a real Windows update has not yet been verified. To restore, close the app before replacing its data folder from a compatible backup. Browser preview data is stored in that browser and can be removed when site data is cleared.
 
-The landing page stores only its theme choice in browser local storage; demo tasks are held in memory.
+First launch includes sample tasks, routines and cards. **Reset Account clears personal state and restores these starter samples**, rather than leaving an empty workspace. It requires typing `RESET`. It is not a secure physical-erasure feature. Windows Settings → Apps → DayFlow is the expected uninstall route; verify uninstall/data retention on Windows before relying on it.
 
-## Technology and repository layout
+## Known limitations and review results
 
-| Component | Technology / availability |
-| --- | --- |
-| Public website | HTML, CSS, vanilla JavaScript |
-| Website hosting | GitHub Pages, deployed with GitHub Actions |
-| Desktop application | Previously packaged using Electron with a React/TypeScript interface; full source is not in this repository yet |
-| Installer | Windows executable supplied through GitHub Releases |
+The review build fixes local date/month-end handling, end-of-month monthly recurrence, negative-balance clamping, unsafe startup overwriting after a failed data load, dashboard completion counts and stale Undo overwriting later changes. It also gives timeline blocks more readable space. Desktop versions of these fixes require a new installer.
 
-```text
-index.html                 Website and illustrative demo
-.github/workflows/pages.yml  GitHub Pages deployment
-scripts/check-website.cjs   Focused website source checks
-docs/AUDIT.md               Evidence, limitations, and remaining tests
-README.md                  Project overview
-```
+Focused checks: **14/14 passed for the review build; 9/14 passed for the original renderer**. Browser interaction checks covered task lifecycle, recurring-task deletion, routine scheduling/calendar synchronization, event editing and overlap display, transaction edits/deletes/transfers, budget deletion, profile/photo save, themes, confirmed reset and persistence after refresh/tab reopening. See the [audit](docs/AUDIT.md) for exact scope and remaining tests.
 
-## Run the website locally
+Recurring tasks/events generate a finite set (120 daily, 52 weekly or 12 monthly occurrences). Budget period labels do not automatically roll dates forward. Reminder flags do not implement background OS notifications. Windows acceptance, mobile device testing, every recurrence deletion branch and encrypted-storage guarantees remain outside the verified scope.
 
-Clone or download this repository. Open `index.html` in a browser, or serve the folder with a static web server. For example, if Python is installed:
+## Feedback
 
-```sh
-python -m http.server 8000
-```
+Please [open an issue](https://github.com/Pronto4056/dayflow-desktop/issues) with the build used, operating system, steps, expected result and a screenshot without personal information. Do not attach real financial records or your complete data folder publicly.
 
-Then visit `http://localhost:8000`.
-
-With Node.js installed, run the focused source checks:
-
-```sh
-node scripts/check-website.cjs index.html
-```
-
-No npm installation is needed for this landing page. Desktop build instructions will be added only after the actual application source and configuration are restored and verified.
-
-## Screenshots
-
-New application screenshots are pending access to a runnable copy. The landing-page illustration should not be represented as a screenshot of the full app. No fabricated screenshots are included.
-
-## Reporting a problem
-
-[Open an issue](https://github.com/Pronto4056/dayflow-desktop/issues) with the app version, Windows version, steps to reproduce, expected result, and actual result. Use sample data and redact any personal details in screenshots.
-
-## Before a wider release
-
-- Restore and review the complete app source and desktop build configuration.
-- Run the app workflow and clean Windows checklist in the audit document.
-- Capture real application screenshots with non-sensitive sample data.
-- Reconcile the release notes with the assets actually published.
-- Consider code signing for future releases.
+The project was developed with AI coding assistance and iterative feature/interaction review. No project license has been declared; public availability alone does not grant an open-source license.

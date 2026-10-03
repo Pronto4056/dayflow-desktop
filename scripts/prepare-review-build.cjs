@@ -51,11 +51,17 @@ replaceExact('balance:y(Math.max(0,t+r))', 'balance:y(t+r)');
 replaceExact('n=Math.max(0,u.balance-r)', 'n=u.balance-r');
 
 // A corrupt-data starter view must never auto-save over the unreadable data.
-replaceExact('A=(0,_.useRef)(null);', 'A=(0,_.useRef)(null),dayflowPersistenceBlocked=(0,_.useRef)(!1);');
+replaceExact('A=(0,_.useRef)(null);', 'A=(0,_.useRef)(null),dayflowPersistenceBlocked=(0,_.useRef)(!1),dayflowUndoBaseline=(0,_.useRef)(null);');
 replaceExact('let e=Re();t(e.data)', 'let e=Re();dayflowPersistenceBlocked.current=!!e.error,t(e.data)');
 replaceExact('if(n){try{localStorage.setItem', 'if(n&&!dayflowPersistenceBlocked.current){try{localStorage.setItem');
 replaceExact('A safe starter view has been opened; existing files were not intentionally removed.', 'A temporary starter view is open and saving is disabled to protect the original data. Close the app and back up its data folder before recovery.');
 replaceExact('localStorage.removeItem(`dayflow-v2`),t(Ne)', 'localStorage.removeItem(`dayflow-v2`),dayflowPersistenceBlocked.current=!1,t(Ne)');
+
+// The original Undo replaces the full prior snapshot. Expire it after any new
+// state change so it cannot discard a later task completion, pause or theme change.
+replaceExact('},[oe]);let j=', '},[oe]),(0,_.useEffect)(()=>{if(le){if(dayflowUndoBaseline.current===null)dayflowUndoBaseline.current=e;else if(dayflowUndoBaseline.current!==e){ue(null);dayflowUndoBaseline.current=null}}else dayflowUndoBaseline.current=null},[e,le]);let j=');
+replaceExact('ne(e),ue(t||null)', 'ne(e),dayflowUndoBaseline.current=null,ue(t||null)');
+replaceExact('he=()=>{le&&(t(le),ue(null),ne(`Deletion undone`),A.current&&window.clearTimeout(A.current),A.current=window.setTimeout(()=>ne(``),2300))}', 'he=()=>{if(!le)return;if(dayflowUndoBaseline.current!==null&&dayflowUndoBaseline.current!==e){ue(null),ne(`Undo expired because other data changed`);return}t(le),ue(null),ne(`Deletion undone`),A.current&&window.clearTimeout(A.current),A.current=window.setTimeout(()=>ne(``),2300)}');
 
 // Keep duration-based placement while giving routine/event labels and actions space.
 replaceExact('style:{top:t*60}', 'style:{top:t*120}');
