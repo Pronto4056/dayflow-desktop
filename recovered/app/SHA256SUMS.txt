@@ -1,0 +1,6 @@
+7d2b48ad5f99caae49687478eef877b833adbf26f82ee76c1d010aa91608c255   desktop/main.mjs
+caafc7e9dfd0f41aab87966583ab17bf9f4039e85de8b67b0c2867e4f634429c   desktop/preload.cjs
+d8a6d24456d9037a687d7ff4641a010a23e3f2c62923aa858045957ce7f44bc9   dist-desktop/assets/index-BNpHI6a5.css
+1aa4b0d65e66f24774692061cb1b3e7149653e87f3f2e46e05ca3c7b7695c04f   dist-desktop/assets/index-BsYSeHvl.js
+4e197db276f0d7b4f707a97afe14ac9c16b0fbfbae97d41723b75abbe2e9ef32   dist-desktop/index.html
+44a0d58acda17ff9fa9a2b9a98da09b81bd93715ca38dc93fec6bbbf5bf7339d   package.json

@@ -1,0 +1,19 @@
+{
+  "name": "dayflow-app",
+  "version": "1.0.0",
+  "private": true,
+  "main": "desktop/main.mjs",
+  "author": "ZeroTech Solutions Limited",
+  "description": "DayFlow personal productivity and manual financial overview application for Windows.",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.2",
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "type": "module",
+  "displayName": "DayFlow"
+}
