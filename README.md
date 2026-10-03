@@ -44,6 +44,8 @@ The recovered interface is compiled JavaScript using React 19.2.6, HTML and CSS.
 
 **This repository does not contain the complete original editable application project.** Original TS/TSX components, source maps, dependency lockfile, desktop build configuration, installer scripts and icon source have not been recovered. The packaged manifest is not a desktop build recipe. `npm install` cannot recreate the original installer from this repository. GitHub's automatic source archives at tag `V1.0.0` contain the older promotional website; current `main` includes the recovered files listed above. No portable executable is currently attached to the release.
 
+A separate [`release/1.0.1` branch](https://github.com/Pronto4056/dayflow-desktop/tree/release/1.0.1) contains reconstructed desktop packaging, icons, a pinned lockfile and build instructions around the recovered renderer. It does not restore the original TSX project. Its installer built in Windows CI, but the acceptance test timed out while installing original 1.0.0. The candidate remains a draft; the green overall workflow status is not a passing acceptance result.
+
 ## Run the browser review locally
 
 Clone this repository, then serve it with Python 3:

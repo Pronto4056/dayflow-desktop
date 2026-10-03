@@ -44,6 +44,8 @@ First launch/reset restores starter samples. Task/event recurrences are finite. 
 
 ## Before a new Windows release
 
+A separate `release/1.0.1` branch already contains reconstructed packaging and a draft installer. Workflow run `37149991323` built the candidate, but its logs report `Timed out waiting for condition` during original 1.0.0 installation and explicitly record acceptance outcome `failure`. Later artifact/draft-upload steps completed, making the overall workflow green; this does not prove Windows acceptance. No successful native application workflow is claimed from that run. Inspect and repair the installation-test failure before promoting the draft. These candidate files are separate from main and are not original editable TSX sources.
+
 Recover or reconstruct the original editable project, lockfile, installer configuration and icon assets. Apply the reviewed fixes to maintainable source, preserve the user-data path, and build a new version. On clean Windows 10/11, test install/location/shortcuts, every CRUD/cancel/delete branch, recurrence scopes, transactions and transfers, close/reopen/reboot, offline launch, update retention, typed reset and uninstall. Confirm publisher attribution; sign only with a valid certificate or retain the unsigned disclosure.
 
 ## Screenshots
