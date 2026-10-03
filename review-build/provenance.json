@@ -2,7 +2,11 @@
   "basedOn": "DayFlow 1.0.0 packaged renderer",
   "status": "Browser review build; not a rebuilt or validated Windows release",
   "originalHash": "1aa4b0d65e66f24774692061cb1b3e7149653e87f3f2e46e05ca3c7b7695c04f",
-  "patchedHash": "180c61f09748e2f509dd6727e91b959570453404b4cef496a466966bfb7b1879",
+  "patchedHash": "722f09db97bd900ebe4f891c11bdd5166f134e95e0ef7dc59f46a5e40921c13b",
+  "originalCssHash": "d8a6d24456d9037a687d7ff4641a010a23e3f2c62923aa858045957ce7f44bc9",
+  "patchedCssHash": "8f2fa9958c028ebe303fb84d996fee67ea619f76a223435ae5073e236c312949",
+  "reviewJs": "dayflow-review-722f09db97bd.js",
+  "reviewCss": "dayflow-review-8f2fa9958c02.css",
   "changes": [
     {
       "expression": "new Date().toISOString().slice(0,10)",
@@ -54,6 +58,26 @@
     },
     {
       "expression": "localStorage.removeItem(`dayflow-v2`),t(Ne)",
+      "replacements": 1
+    },
+    {
+      "expression": "style:{top:t*60}",
+      "replacements": 1
+    },
+    {
+      "expression": "style:{top:new Date().getHours()*60+new Date().getMinutes()}",
+      "replacements": 1
+    },
+    {
+      "expression": "let t=he(e.start),n=Math.max(44,he(e.end)-t),r=",
+      "replacements": 1
+    },
+    {
+      "expression": "top:Math.max(0,t-150)",
+      "replacements": 1
+    },
+    {
+      "expression": "className:`modal-x`,onClick:Ce",
       "replacements": 1
     }
   ]

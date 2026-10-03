@@ -5,7 +5,9 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
 const originalPath = path.resolve(process.argv[2] || 'recovered/app/dist-desktop/assets/index-BsYSeHvl.js');
-const reviewPath = path.resolve(process.argv[3] || 'review-build/assets/index-BsYSeHvl.js');
+const reviewIndex = fs.readFileSync('review-build/index.html', 'utf8');
+const reviewAsset = reviewIndex.match(/src="\.\/assets\/([^"]+)"/)[1];
+const reviewPath = path.resolve(process.argv[3] || path.join('review-build/assets',reviewAsset));
 const results = [];
 function between(source, start, end) {
   const a = source.indexOf(start);

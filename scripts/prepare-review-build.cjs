@@ -57,17 +57,34 @@ replaceExact('if(n){try{localStorage.setItem', 'if(n&&!dayflowPersistenceBlocked
 replaceExact('A safe starter view has been opened; existing files were not intentionally removed.', 'A temporary starter view is open and saving is disabled to protect the original data. Close the app and back up its data folder before recovery.');
 replaceExact('localStorage.removeItem(`dayflow-v2`),t(Ne)', 'localStorage.removeItem(`dayflow-v2`),dayflowPersistenceBlocked.current=!1,t(Ne)');
 
+// Keep duration-based placement while giving routine/event labels and actions space.
+replaceExact('style:{top:t*60}', 'style:{top:t*120}');
+replaceExact('style:{top:new Date().getHours()*60+new Date().getMinutes()}', 'style:{top:(new Date().getHours()*60+new Date().getMinutes())*2}');
+replaceExact('let t=he(e.start),n=Math.max(44,he(e.end)-t),r=', 'let t=he(e.start)*2,n=Math.max(66,(he(e.end)-he(e.start))*2),r=');
+replaceExact('top:Math.max(0,t-150)', 'top:Math.max(0,(t-60)*2)');
+replaceExact('className:`modal-x`,onClick:Ce', 'className:`modal-x`,"aria-label":`Close`,onClick:Ce');
+
 // Compile before creating any output; exact-match guards reject an incompatible bundle.
 code = helpers + code;
 new (require('node:vm').Script)(code, { filename: 'DayFlow-review-renderer.js' });
 fs.mkdirSync(path.join(output, 'assets'), { recursive: true });
-fs.copyFileSync(path.join(input, 'index.html'), path.join(output, 'index.html'));
-fs.copyFileSync(path.join(input, 'assets', 'index-BNpHI6a5.css'), path.join(output, 'assets', 'index-BNpHI6a5.css'));
-fs.writeFileSync(path.join(output, 'assets', jsName), code);
 const patchedHash = crypto.createHash('sha256').update(code).digest('hex');
+const reviewJs = `dayflow-review-${patchedHash.slice(0, 12)}.js`;
+let css = fs.readFileSync(path.join(input, 'assets', 'index-BNpHI6a5.css'), 'utf8');
+const originalCssHash = crypto.createHash('sha256').update(css).digest('hex');
+const cssBefore = '.timeline{height:1440px';
+if (css.split(cssBefore).length - 1 !== 1) throw new Error('Unsupported timeline stylesheet.');
+css = css.replace(cssBefore, '.timeline{height:2880px').replace('.hour-row{align-items:start;height:60px', '.hour-row{align-items:start;height:120px');
+const patchedCssHash = crypto.createHash('sha256').update(css).digest('hex');
+const reviewCss = `dayflow-review-${patchedCssHash.slice(0, 12)}.css`;
+let html = fs.readFileSync(path.join(input, 'index.html'), 'utf8');
+html = html.replace(jsName, reviewJs).replace('index-BNpHI6a5.css', reviewCss);
+fs.writeFileSync(path.join(output, 'index.html'), html);
+fs.writeFileSync(path.join(output, 'assets', reviewCss), css);
+fs.writeFileSync(path.join(output, 'assets', reviewJs), code);
 fs.writeFileSync(path.join(output, 'provenance.json'), JSON.stringify({
   basedOn: 'DayFlow 1.0.0 packaged renderer',
   status: 'Browser review build; not a rebuilt or validated Windows release',
-  originalHash, patchedHash, changes,
+  originalHash, patchedHash, originalCssHash, patchedCssHash, reviewJs, reviewCss, changes,
 }, null, 2) + '\n');
 console.log(JSON.stringify({ output, originalHash, patchedHash, changes: changes.length }, null, 2));
