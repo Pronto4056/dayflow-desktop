@@ -68,3 +68,18 @@ Run with synthetic data in a separate test profile. Record pass/fail, app versio
 | Website browser | Mobile layout, theme, menu, demo, clipboard, actual download | Not run |
 
 Do not describe this audit as a security certification or proof that every feature works. An honest progress announcement is possible; a fully validated release announcement should wait for the remaining checks.
+
+
+## Fresh continuation verification — 3 October 2026
+
+The earlier sections describe the initial audit and are historical. Current main at `74697a8` includes recovered Electron scripts, compiled React assets, a guarded review-build patch script, and release-note corrections. Full original TypeScript/TSX source and installer build configuration remain missing.
+
+- Uploaded installer SHA-256 was computed locally and matches the documented release checksum. The Windows executable was not executed.
+- Website source checks passed.
+- Packaged-helper tests: 9 passed, 5 failed. Failures cover month-end recurrence, negative debit balances, local today near midnight, budget month-end in a positive timezone, and overwriting unreadable saved data.
+- Separate review-build helper tests: all 14 passed. This does not certify the patched renderer or a Windows release.
+- Fresh UI checks on the recovered packaged renderer: launch, task creation, completion, restoration, persistence after browser reload, dark theme switching and persistence passed. Calendar and financial views rendered with built-in synthetic data. These views were not comprehensively acceptance-tested.
+- The original dashboard completion card was visibly inconsistent: after adding a task it reported 1 of 3 alongside 25%; after completing that task it reported 2 of 2 alongside 50%. The review build contains a denominator fix, not present in the installer.
+- Four screenshots were captured from the original recovered renderer in a browser; they are not Windows captures.
+- README corrections and screenshots are prepared locally. No repository write or new deployment was performed in this continuation because GitHub tools did not become callable after installation.
+- Windows installation, offline launch, uninstall, desktop persistence, and the remaining UI acceptance checklist still require verification.

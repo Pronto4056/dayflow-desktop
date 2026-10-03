@@ -1,0 +1,74 @@
+name: Build and validate DayFlow Windows candidate
+on:
+  push:
+    branches: [release/1.0.1]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: dayflow-windows-1.0.1
+  cancel-in-progress: false
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run prepare:app
+      - name: Check original regressions and release fixes
+        run: npm test
+      - name: Build unsigned Windows installer
+        id: build
+        run: npm run dist:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - name: Exercise Windows installation, upgrade and application workflows
+        id: acceptance
+        continue-on-error: true
+        run: npm run test:windows
+        env:
+          CI: 'true'
+      - name: Produce checksum and release evidence
+        if: always() && steps.build.outcome == 'success'
+        shell: pwsh
+        run: |
+          $hash = (Get-FileHash release/DayFlow-Setup-1.0.1.exe -Algorithm SHA256).Hash.ToLower()
+          "$hash  DayFlow-Setup-1.0.1.exe" | Out-File release/DayFlow-1.0.1-SHA256.txt -Encoding utf8
+          Copy-Item .build/provenance.json release/DayFlow-1.0.1-build-provenance.json
+          if (Test-Path test-results/windows-acceptance.json) { Copy-Item test-results/windows-acceptance.json release/DayFlow-1.0.1-windows-tests.json }
+          Copy-Item docs/RELEASE-V1.0.1.md release/release-notes.md
+          "`nAutomated Windows acceptance outcome: ${{ steps.acceptance.outcome }}. See the attached test report. Manual Windows 10/11 first-run review remains required before public promotion." | Add-Content release/release-notes.md
+      - name: Save installer and test evidence
+        if: always() && steps.build.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: DayFlow-1.0.1-Windows-candidate
+          path: |
+            release/DayFlow-Setup-1.0.1.exe
+            release/DayFlow-1.0.1-*.txt
+            release/DayFlow-1.0.1-*.json
+            test-results/
+          retention-days: 30
+      - name: Upload draft release only
+        if: always() && steps.build.outcome == 'success'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $existing = gh release view V1.0.1 --json isDraft 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            if (-not ($existing | ConvertFrom-Json).isDraft) { throw 'Refusing to overwrite a published release.' }
+            gh release edit V1.0.1 --draft --target '${{ github.sha }}' --notes-file release/release-notes.md
+          } else {
+            gh release create V1.0.1 --draft --target '${{ github.sha }}' --title 'DayFlow 1.0.1 — Windows release candidate' --notes-file release/release-notes.md
+          }
+          if ($LASTEXITCODE -ne 0) { throw 'Draft release creation failed.' }
+          gh release upload V1.0.1 release/DayFlow-Setup-1.0.1.exe release/DayFlow-1.0.1-SHA256.txt release/DayFlow-1.0.1-build-provenance.json --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Draft installer upload failed.' }
+          if (Test-Path release/DayFlow-1.0.1-windows-tests.json) { gh release upload V1.0.1 release/DayFlow-1.0.1-windows-tests.json --clobber }
+          gh release view V1.0.1 --json url,isDraft,assets

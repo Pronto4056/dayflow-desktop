@@ -4,11 +4,17 @@ A personal project bringing daily planning and manual money tracking into one pl
 
 [Visit the website](https://pronto4056.github.io/dayflow-desktop/) · [Download Windows installer](https://github.com/Pronto4056/dayflow-desktop/releases/download/V1.0.0/DayFlow-Setup-1.0.0.exe) · [Release details](https://github.com/Pronto4056/dayflow-desktop/releases/tag/V1.0.0)
 
+## Version 1.0.1 candidate
+
+A reconstructed Windows build with bug fixes and an empty first-launch workspace is being prepared. See [build instructions](docs/BUILD.md) and [candidate release notes](docs/RELEASE-V1.0.1.md). It must pass the release gate before replacing the public download.
+
 ## Project status
 
 DayFlow is an experimental personal project, built iteratively with AI-assisted development. Version 1.0.0 is available as an **unsigned Windows installer**. Feedback and reproducible bug reports are welcome.
 
-**This repository currently contains the promotional website, not the full React/Electron application source.** GitHub's automatically generated “Source code” ZIP and TAR files contain this repository only; they are not a rebuildable desktop application. Recovery of the complete application source is pending.
+**This repository contains the promotional website, recovered Electron entry points and compiled React interface, and a separate browser review build.** It does not contain the complete original TypeScript/TSX project or the configuration needed to reproduce the Windows installer. See [recovery details](recovered/README.md). GitHub source archives are repository snapshots, not a complete rebuildable desktop project.
+
+**The downloadable 1.0.0 installer has known issues.** Isolated tests reproduce five failures involving local dates, month-end recurrence, negative debit balances, and unreadable-data recovery. Browser interaction also shows an incorrect task-completion denominator. Existing fixes in `review-build/` are separate from the installer; a new installer and Windows acceptance testing are still required.
 
 The website includes a small, clearly labeled illustrative interactive demo. It is not the full application. Its example tasks reset on reload, and its calendar and financial figures are sample data. The separate full web prototype currently requires owner access.
 
@@ -19,7 +25,7 @@ The website includes a small, clearly labeled illustrative interactive demo. It 
 - Track manually entered card balances, budgets, transactions, and transfers.
 - Offer local persistence and light/dark themes.
 
-These describe the application scope. The October 2026 audit verified the website source and release metadata; it did **not** independently verify these desktop workflows. See the [audit and test checklist](docs/AUDIT.md).
+Fresh browser checks verified task creation, completion, restoration, reload persistence, and dark-theme persistence in the recovered packaged interface. Isolated tests exercised accounting, routines, dates, and timeline helpers. These checks do not establish Windows installation or desktop workflow readiness. See the [audit and test checklist](docs/AUDIT.md).
 
 ## Download and installation
 
@@ -53,7 +59,7 @@ Expected SHA-256, also recorded in GitHub's release asset metadata:
 
 The application was designed for manual finance tracking, without bank connections. Do not enter full card numbers, security codes, PINs, bank passwords, or real sensitive financial information when evaluating this release.
 
-The previously documented desktop data location is `%APPDATA%\DayFlow`. Confirm the folder exists on your installation. Close the app before copying that folder for backup; keep the backup private. Backup restoration and update retention have not been reverified in this audit.
+The recovered Electron main process sets the desktop data directory to `%APPDATA%\DayFlow`. Browser evaluation instead uses local storage under `dayflow-v2`. Confirm the desktop folder exists on your installation. Close the app before copying that folder for backup; keep the backup private. Backup restoration and update retention have not been reverified in this audit.
 
 Local storage does not, by itself, establish encryption or protection from other users of the computer. This project does not claim an independent security audit, bank-grade encryption, cloud synchronization, or financial advice.
 
@@ -65,13 +71,16 @@ The landing page stores only its theme choice in browser local storage; demo tas
 | --- | --- |
 | Public website | HTML, CSS, vanilla JavaScript |
 | Website hosting | GitHub Pages, deployed with GitHub Actions |
-| Desktop application | Previously packaged using Electron with a React/TypeScript interface; full source is not in this repository yet |
+| Desktop application | Recovered Electron main/preload scripts and compiled React interface; original TypeScript/TSX source and complete build configuration remain missing |
 | Installer | Windows executable supplied through GitHub Releases |
 
 ```text
 index.html                 Website and illustrative demo
 .github/workflows/pages.yml  GitHub Pages deployment
 scripts/check-website.cjs   Focused website source checks
+recovered/app/             Original recovered distribution files
+review-build/              Separately patched browser review build
+scripts/check-app.cjs       Isolated original/review helper tests
 docs/AUDIT.md               Evidence, limitations, and remaining tests
 README.md                  Project overview
 ```
@@ -92,11 +101,19 @@ With Node.js installed, run the focused source checks:
 node scripts/check-website.cjs index.html
 ```
 
-No npm installation is needed for this landing page. Desktop build instructions will be added only after the actual application source and configuration are restored and verified.
+No npm installation is needed for this landing page. To inspect the recovered interface, visit `http://localhost:8000/recovered/app/dist-desktop/`. To inspect the separately corrected interface, visit `http://localhost:8000/review-build/`. Run `node scripts/check-app.cjs` to compare isolated helper checks. Desktop build instructions require restoration of the original source and build configuration.
 
 ## Screenshots
 
-New application screenshots are pending access to a runnable copy. The landing-page illustration should not be represented as a screenshot of the full app. No fabricated screenshots are included.
+These are captures of the actual recovered 1.0.0 application interface running in a browser with synthetic sample data. They are not Windows desktop captures or website demo mockups. The overview retains the original known completion-count issue.
+
+![DayFlow overview](docs/screenshots/dayflow-01-overview.jpg)
+
+![DayFlow calendar](docs/screenshots/dayflow-02-calendar.jpg)
+
+![DayFlow manual financial overview](docs/screenshots/dayflow-03-financials.jpg)
+
+![DayFlow dark theme](docs/screenshots/dayflow-04-dark-overview.jpg)
 
 ## Reporting a problem
 
@@ -106,6 +123,6 @@ New application screenshots are pending access to a runnable copy. The landing-p
 
 - Restore and review the complete app source and desktop build configuration.
 - Run the app workflow and clean Windows checklist in the audit document.
-- Capture real application screenshots with non-sensitive sample data.
+- Capture and verify Windows desktop screenshots after rebuilding and acceptance testing.
 - Reconcile the release notes with the assets actually published.
 - Consider code signing for future releases.

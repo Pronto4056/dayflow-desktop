@@ -20,7 +20,7 @@ function test(build, name, fn) {
   catch (error) { results.push({ build, name, status: 'FAIL', reason: error.message }); }
 }
 function contexts(source, now) {
-  const helpers = source.startsWith('\nfunction dayflowLocalDate') ? source.slice(0, source.indexOf('var e=Object.create')) : '';
+  const helpers = source.includes('function dayflowLocalDate') ? source.slice(0, source.indexOf('var e=Object.create')) : '';
   class FixedDate extends Date {
     constructor(...args) { super(...(args.length ? args : [now || '2026-10-03T12:00:00Z'])); }
     static now() { return new Date(now || '2026-10-03T12:00:00Z').getTime(); }

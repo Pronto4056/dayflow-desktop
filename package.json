@@ -1,0 +1,67 @@
+{
+  "name": "dayflow-app",
+  "version": "1.0.1",
+  "private": true,
+  "description": "Daily planning and manual financial tracking for Windows.",
+  "author": "ZeroTech Solutions Limited",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "prepare:app": "node scripts/prepare-desktop.cjs",
+    "test": "node scripts/check-website.cjs index.html && node scripts/check-app.cjs && node scripts/check-release.cjs",
+    "dist:win": "npm run prepare:app && electron-builder --win nsis --x64 --publish never",
+    "test:windows": "node scripts/windows-acceptance.cjs"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3",
+    "@playwright/test": "1.63.0",
+    "@electron/asar": "4.0.1"
+  },
+  "build": {
+    "appId": "com.zerotech.dayflow",
+    "productName": "DayFlow",
+    "directories": {
+      "app": ".build/app",
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "desktop/**",
+      "dist-desktop/**",
+      "package.json"
+    ],
+    "asar": true,
+    "extraResources": [
+      {
+        "from": "build/icon.png",
+        "to": "icon.png"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "executableName": "DayFlow",
+      "artifactName": "DayFlow-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": false,
+      "createDesktopShortcut": true,
+      "shortcutName": "DayFlow",
+      "uninstallDisplayName": "DayFlow ${version}"
+    }
+  }
+}
