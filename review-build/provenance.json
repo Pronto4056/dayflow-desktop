@@ -1,0 +1,60 @@
+{
+  "basedOn": "DayFlow 1.0.0 packaged renderer",
+  "status": "Browser review build; not a rebuilt or validated Windows release",
+  "originalHash": "1aa4b0d65e66f24774692061cb1b3e7149653e87f3f2e46e05ca3c7b7695c04f",
+  "patchedHash": "180c61f09748e2f509dd6727e91b959570453404b4cef496a466966bfb7b1879",
+  "changes": [
+    {
+      "expression": "new Date().toISOString().slice(0,10)",
+      "replacements": 3
+    },
+    {
+      "expression": "new Date(new Date().getFullYear(),new Date().getMonth()+1,0).toISOString().slice(0,10)",
+      "replacements": 2
+    },
+    {
+      "expression": "n.toISOString().slice(0,10)",
+      "replacements": 3
+    },
+    {
+      "expression": "Ae=(e,t,n)=>{let r=new Date(`${e}T12:00`);return t===`Daily`&&r.setDate(r.getDate()+n),t===`Weekly`&",
+      "replacements": 1
+    },
+    {
+      "expression": "e.completedAt?.slice(0,10)===P()",
+      "replacements": 1
+    },
+    {
+      "expression": "value:`${N.done} of ${N.todays.length}`",
+      "replacements": 1
+    },
+    {
+      "expression": "balance:y(Math.max(0,t+r))",
+      "replacements": 1
+    },
+    {
+      "expression": "n=Math.max(0,u.balance-r)",
+      "replacements": 1
+    },
+    {
+      "expression": "A=(0,_.useRef)(null);",
+      "replacements": 1
+    },
+    {
+      "expression": "let e=Re();t(e.data)",
+      "replacements": 1
+    },
+    {
+      "expression": "if(n){try{localStorage.setItem",
+      "replacements": 1
+    },
+    {
+      "expression": "A safe starter view has been opened; existing files were not intentionally removed.",
+      "replacements": 1
+    },
+    {
+      "expression": "localStorage.removeItem(`dayflow-v2`),t(Ne)",
+      "replacements": 1
+    }
+  ]
+}
